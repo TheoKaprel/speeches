@@ -2,8 +2,7 @@ import torch
 from torch import nn
 import torch.utils.data as data_utils
 import torch.optim as optim
-from data import SEQ_LEN,SEQ_SKIP,ALPHABET, NB_CHARS, CHAR_INDEX, INDEX_CHAR,inputs, targets
-# from data import SEQ_LEN,SEQ_SKIP,ALPHABET, NB_CHARS, CHAR_INDEX, INDEX_CHAR
+from data import SEQ_LEN,SEQ_SKIP, BATCH_SIZE
 from functions import encode
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,26 +11,17 @@ if torch.cuda.is_available():
     dev = "cuda:0"
 else:
 	dev = "cpu"
+print(dev)
 
+train_loader = torch.load('train_loader.pt')
+test_loader = torch.load('test_loader.pt')
 
-# dev = "cpu"
 device = torch.device(dev)
 
 # Paramètres d'apprentissage
 NB_ITER = 1
-BATCH_SIZE = 64
 
-prct_train = 80
-id_train = int(inputs.shape[0]*80/100)
-
-
-#Data
-train = data_utils.TensorDataset(inputs[:id_train,:,:], targets[:id_train,:])
-train_loader = data_utils.DataLoader(train, batch_size=BATCH_SIZE, shuffle=True)
-
-test = data_utils.TensorDataset(inputs[id_train:,:,:], targets[id_train:,:])
-test_loader = data_utils.DataLoader(test,batch_size = BATCH_SIZE, shuffle = True)
-
+print(train_loader.shape)
 
 
 class NeuralNetwork(nn.Module):
@@ -126,13 +116,3 @@ def train():
         # torch.save(model, f'./model2_epoch_{t}.pt')
     print("Done!")
 
-
-# if __name__ == "__main__":
-train()
-
-
-fig,ax = plt.subplots()
-ax.plot(Loss[0,:])
-# ax.set_yscale('log')
-# ax.set_xscale('log')
-plt.show()
