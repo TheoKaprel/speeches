@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import torch.utils.data as data_utils
 import torch.optim as optim
-from data import SEQ_LEN,SEQ_SKIP, BATCH_SIZE
+from data import SEQ_LEN,SEQ_SKIP, BATCH_SIZE, NB_CHARS, train_loader, test_loader
 from functions import encode
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,15 +13,15 @@ else:
 	dev = "cpu"
 print(dev)
 
-train_loader = torch.load('train_loader.pt')
-test_loader = torch.load('test_loader.pt')
+# train_loader = torch.load('train_loader.pt')
+# test_loader = torch.load('test_loader.pt')
 
 device = torch.device(dev)
 
 # Paramètres d'apprentissage
-NB_ITER = 1
+NB_ITER = 2
 
-print(train_loader.shape)
+print(train_loader.dataset.tensors[0].shape)
 
 
 class NeuralNetwork(nn.Module):
@@ -55,7 +55,7 @@ nb_of_batch = (len(train_loader))
 
 
 loss_function = nn.BCEWithLogitsLoss()
-optimizer = optim.Adam(model.parameters(),lr = 0.05)
+optimizer = optim.Adam(model.parameters(),lr = 0.005)
 
 Loss = np.zeros((NB_ITER,nb_of_batch))
 
